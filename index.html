@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Product Item Grid의 상태 조합을 확인하고 개발용 props를 복사하는 플레이그라운드"
+    />
+    <title>Product Item · Playground</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101113%22/><path d=%22M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z%22 fill=%22white%22/></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand-lockup" href="#" aria-label="Product Item Playground 홈">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Product Item</span>
+        <span class="brand-slash">/</span>
+        <span class="brand-muted">Playground</span>
+      </a>
+      <div class="header-actions">
+        <a
+          class="text-link"
+          href="https://www.figma.com/design/qvPTRPZfih4sMEBTO7AYZt/Product-Item-grid-guide?node-id=3271-12778"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Figma 원본 <span aria-hidden="true">↗</span>
+        </a>
+        <button class="button button-secondary" id="resetButton" type="button">
+          <span aria-hidden="true">↺</span> 초기화
+        </button>
+        <button class="button button-primary" id="copyHeaderButton" type="button">
+          Props 복사
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">DESIGN SYSTEM · 2026</p>
+          <h1 id="pageTitle">상품 카드의 모든 상태를<br />한곳에서 확인하세요.</h1>
+        </div>
+        <p class="intro-copy">
+          옵션을 바꾸면 미리보기와 개발 값이 함께 갱신됩니다.<br />
+          Figma 편집 권한 없이도 조합을 검토하고 바로 적용할 수 있어요.
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="상품 카드 플레이그라운드">
+        <aside class="panel controls-panel" aria-labelledby="controlsTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">01</p>
+              <h2 id="controlsTitle">상태 설정</h2>
+            </div>
+            <span class="live-pill"><i></i> LIVE</span>
+          </div>
+
+          <form id="controlsForm">
+            <fieldset class="control-section">
+              <legend>레이아웃</legend>
+              <div class="segmented layout-segmented" role="radiogroup" aria-label="레이아웃">
+                <label>
+                  <input type="radio" name="layout" value="small" checked />
+                  <span><strong>small</strong><small>109px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="smedium" />
+                  <span><strong>smedium</strong><small>156px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="medium" />
+                  <span><strong>medium</strong><small>163px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="big" />
+                  <span><strong>big</strong><small>250px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="1grid" />
+                  <span><strong>1grid</strong><small>343px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="horizontal" />
+                  <span><strong>horizontal</strong><small>343px</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="layout" value="compact" />
+                  <span><strong>compact</strong><small>316px</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-section">
+              <legend>서비스</legend>
+              <div class="segmented" role="radiogroup" aria-label="서비스">
+                <label>
+                  <input type="radio" name="service" value="rent" checked />
+                  <span>렌트</span>
+                </label>
+                <label>
+                  <input type="radio" name="service" value="vintage" />
+                  <span>구매</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-section">
+              <legend>콘텐츠 구성</legend>
+              <div class="choice-row">
+                <div>
+                  <strong>브랜드명</strong>
+                  <small>Brand 영역 표시</small>
+                </div>
+                <div class="mini-segmented">
+                  <label><input type="radio" name="brand" value="yes brand" checked /><span>있음</span></label>
+                  <label><input type="radio" name="brand" value="no brand" /><span>없음</span></label>
+                </div>
+              </div>
+              <div class="choice-row">
+                <div>
+                  <strong>상품명</strong>
+                  <small>Product 영역 표시</small>
+                </div>
+                <div class="mini-segmented">
+                  <label><input type="radio" name="product" value="yes product" checked /><span>있음</span></label>
+                  <label><input type="radio" name="product" value="no product" /><span>없음</span></label>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-section toggles-section">
+              <legend>옵션</legend>
+              <label class="switch-row" data-option="soldOut">
+                <span><strong>품절 상태</strong><small>soldOut · 렌트/구매</small></span>
+                <input type="checkbox" name="soldOut" />
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="switch-row" data-option="heart">
+                <span><strong>찜 버튼</strong><small>heart</small></span>
+                <input type="checkbox" name="heart" checked />
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="switch-row" data-option="propNew">
+                <span><strong>신상품 배지</strong><small>new</small></span>
+                <input type="checkbox" name="propNew" checked />
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="switch-row" data-option="sale">
+                <span><strong>할인율</strong><small>sale</small></span>
+                <input type="checkbox" name="sale" checked />
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="switch-row" data-option="previousPrice">
+                <span><strong>이전 가격</strong><small>previousPrice · 구매</small></span>
+                <input type="checkbox" name="previousPrice" checked />
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="switch-row" data-option="sticker">
+                <span><strong>서비스 라벨</strong><small>sticker</small></span>
+                <input type="checkbox" name="sticker" checked />
+                <i aria-hidden="true"></i>
+              </label>
+            </fieldset>
+
+            <details class="content-details">
+              <summary>표시 문구 편집 <span aria-hidden="true">⌄</span></summary>
+              <div class="field-grid">
+                <label>브랜드명<input name="brandName" value="브랜드명" /></label>
+                <label>상품명<input name="productName" value="상품명 한줄" /></label>
+                <label>판매가<input name="price" value="1,290,000원" /></label>
+                <label>이전 가격<input name="originalPrice" value="1,590,000원" /></label>
+                <label>할인율<input name="discount" value="19%" /></label>
+                <label>렌트 기간<input name="period" value="/30일" /></label>
+                <label>컨디션<input name="condition" value="VERY_GOOD" /></label>
+                <label>이벤트 라벨<input name="eventLabel" value="타임세일" /></label>
+              </div>
+            </details>
+          </form>
+        </aside>
+
+        <section class="panel preview-panel" aria-labelledby="previewTitle">
+          <div class="panel-heading preview-heading">
+            <div>
+              <p class="step-label">02</p>
+              <h2 id="previewTitle">미리보기</h2>
+            </div>
+            <div class="zoom-control" aria-label="미리보기 배율">
+              <button type="button" data-zoom="1">1×</button>
+              <button type="button" data-zoom="2" class="active">2×</button>
+            </div>
+          </div>
+
+          <div class="preview-stage" id="previewStage" data-layout="small" data-zoom="2">
+            <div class="preview-grid-bg" aria-hidden="true"></div>
+            <div id="productPreview" class="product-preview" aria-live="polite"></div>
+            <div class="measure measure-x" aria-hidden="true"><span>109 px</span></div>
+            <div class="measure measure-y" aria-hidden="true"><span>auto</span></div>
+          </div>
+
+          <div class="state-caption">
+            <span class="state-dot" id="serviceDot"></span>
+            <code id="stateSummary">small · rent · yes brand · yes product</code>
+          </div>
+        </section>
+
+        <aside class="panel output-panel" aria-labelledby="outputTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">03</p>
+              <h2 id="outputTitle">개발 값</h2>
+            </div>
+            <span class="format-pill">React</span>
+          </div>
+
+          <div class="code-tabs" role="tablist" aria-label="개발 값 형식">
+            <button type="button" class="active" data-tab="jsx" role="tab" aria-selected="true">Component</button>
+            <button type="button" data-tab="json" role="tab" aria-selected="false">Props JSON</button>
+          </div>
+          <div class="code-wrap">
+            <pre><code id="codeOutput"></code></pre>
+            <button class="copy-code" id="copyCodeButton" type="button" aria-label="코드 복사">
+              <span aria-hidden="true">⧉</span> 복사
+            </button>
+          </div>
+
+          <div class="logic-note" id="logicNote">
+            <span aria-hidden="true">i</span>
+            <p><strong>표시 규칙</strong><br /><span id="logicText"></span></p>
+          </div>
+
+          <button class="share-button" id="shareButton" type="button">
+            현재 설정 링크 복사 <span aria-hidden="true">↗</span>
+          </button>
+        </aside>
+      </section>
+
+      <section class="presets-section" aria-labelledby="presetsTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">QUICK PRESETS</p>
+            <h2 id="presetsTitle">자주 쓰는 조합</h2>
+          </div>
+          <p>카드를 누르면 해당 설정이 플레이그라운드에 적용됩니다.</p>
+        </div>
+        <div class="preset-grid" id="presetGrid"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다.</div>
+    <script src="./app.js"></script>
+  </body>
+</html>
