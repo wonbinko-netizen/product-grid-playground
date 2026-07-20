@@ -377,7 +377,7 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .product-card.big .label { font-size: 12px; }
 .product-card.big .empty-info { padding: 12px 9px; font-size: 12px; }
 
-.product-card.one-grid { width: 343px; gap: 12px; padding-bottom: 14px; overflow: hidden; border: 1px solid #edeff4; border-radius: 16px; }
+.product-card.one-grid { width: 343px; gap: 12px; padding-bottom: 14px; overflow: hidden; border: 1px solid #edeff4; border-radius: 18px; }
 .product-card.one-grid .product-media { width: 100%; height: 170px; border-radius: 14px 14px 0 0; }
 .product-card.one-grid .product-media::after { inset: 34px auto auto 50%; width: 110px; height: 100px; transform: translateX(-50%); border-radius: 14px; }
 .product-card.one-grid .sold-out-overlay { border-radius: 14px 14px 0 0; }
