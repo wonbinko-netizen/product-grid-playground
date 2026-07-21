@@ -5,6 +5,7 @@ const defaults = {
   product: "yes product",
   soldOut: false,
   heart: true,
+  priceVisible: true,
   previousPrice: true,
   propNew: true,
   sale: true,
@@ -121,8 +122,9 @@ function readForm() {
   const next = {};
   for (const [key, defaultValue] of Object.entries(defaults)) {
     const control = form.elements[key];
-    const isDisabledBoolean = typeof defaultValue === "boolean" && control instanceof HTMLInputElement && control.disabled;
-    next[key] = typeof defaultValue === "boolean" ? (isDisabledBoolean ? state[key] : data.has(key)) : (data.get(key) ?? defaultValue);
+    const isDisabled = control instanceof HTMLInputElement && control.disabled;
+    if (isDisabled) next[key] = state[key];
+    else next[key] = typeof defaultValue === "boolean" ? data.has(key) : (data.get(key) ?? defaultValue);
   }
   state = next;
 }
@@ -272,8 +274,8 @@ function getVisibility(s = state) {
     hasProduct,
     hasAnyInfo,
     showCondition: s.service === "vintage" && hasAnyInfo && s.layout !== "compact",
-    showPreviousPrice: s.service === "vintage" && s.previousPrice && hasAnyInfo && s.layout !== "compact",
-    showPrice: hasAnyInfo,
+    showPreviousPrice: s.service === "vintage" && s.priceVisible && s.previousPrice && hasAnyInfo && s.layout !== "compact",
+    showPrice: hasAnyInfo && s.priceVisible,
   };
 }
 
@@ -294,7 +296,7 @@ function cardTemplate(s = state) {
       ${showSecondLine ? `<span class="product-name">${escapeHtml(s.productName)}</span>` : ""}
     </div>
   `;
-  const standardPriceTemplate = `
+  const standardPriceTemplate = v.showPrice ? `
     <div class="price-area">
       ${v.showPreviousPrice ? `<span class="previous-price">${escapeHtml(s.originalPrice)}</span>` : ""}
       ${s.service === "vintage" ? `
@@ -312,8 +314,8 @@ function cardTemplate(s = state) {
         <span class="current-price">${escapeHtml(s.price)}<span class="period">${escapeHtml(s.period)}</span></span>
       `}
     </div>
-  `;
-  const oneGridPriceTemplate = `
+  ` : "";
+  const oneGridPriceTemplate = v.showPrice ? `
     <div class="price-area one-grid-price-area">
       ${v.showPreviousPrice ? `<span class="previous-price">${escapeHtml(s.originalPrice)}</span>` : ""}
       <div class="one-grid-current-row">
@@ -321,8 +323,8 @@ function cardTemplate(s = state) {
         <span class="current-price">${escapeHtml(s.price)}${s.service === "rent" ? `<span class="period">${escapeHtml(s.period)}</span>` : ""}</span>
       </div>
     </div>
-  `;
-  const horizontalPriceTemplate = `
+  ` : "";
+  const horizontalPriceTemplate = v.showPrice ? `
     <div class="price-area horizontal-price-area">
       ${v.showPreviousPrice ? `<span class="previous-price">${escapeHtml(s.originalPrice)}</span>` : ""}
       <div class="horizontal-current-row">
@@ -330,7 +332,7 @@ function cardTemplate(s = state) {
         <span class="current-price">${escapeHtml(s.price)}${s.service === "rent" ? `<span class="period">${escapeHtml(s.period)}</span>` : ""}</span>
       </div>
     </div>
-  `;
+  ` : "";
 
   return `
     <article class="product-card ${layoutClass} ${s.service}${s.soldOut ? " is-sold-out" : ""}${v.showPreviousPrice ? " has-previous-price" : ""}" data-layout="${s.layout}" aria-label="${s.layout} · ${escapeHtml(serviceLabel)} 상품 카드 미리보기${s.soldOut ? " · 품절" : ""}">
@@ -429,6 +431,7 @@ function propsObject() {
     product: state.product,
     soldOut: state.soldOut,
     heart: state.layout === "compact" ? false : state.heart,
+    priceVisible: state.priceVisible,
     previousPrice: state.layout === "compact" ? false : state.previousPrice,
     propNew: state.propNew,
     sale: state.sale,
@@ -460,11 +463,14 @@ function updateLogic() {
   else if (!v.hasBrand) notes.push("브랜드가 없으면 상품명이 첫 번째 강조 행으로 이동합니다.");
   else if (!v.hasProduct) notes.push("상품명이 없으면 브랜드명만 한 줄로 표시됩니다.");
   else notes.push("브랜드명과 상품명을 각각 한 줄로 표시합니다.");
+  if (!v.showPrice && v.hasAnyInfo) notes.push("가격 표시를 끄면 할인율·현재 가격·이전 가격·렌트 기간을 모두 표시하지 않습니다.");
   notes.push(`${state.layout} 레이아웃은 ${layoutWidths[state.layout]}px 카드 규격을 사용합니다.`);
   if (state.layout === "1grid") notes.push("1grid는 라벨을 브랜드명 위에 배치하고 카드 외곽에 stroke를 표시합니다. 이전 가격 유무에 따라 가격 영역 간격이 달라집니다.");
   if (state.layout === "horizontal") notes.push("horizontal은 125px 이미지와 정보 영역을 가로로 배치하며, 신규 배지는 브랜드명과 같은 줄에 두고 서비스 라벨은 가격 아래에 표시합니다.");
   if (state.layout === "compact") notes.push("compact는 72px 이미지와 정보 영역을 가로로 배치하며, 찜 버튼·서비스 라벨·구매 컨디션 라벨을 사용하지 않습니다.");
-  if (state.layout === "compact") {
+  if (!v.showPrice) {
+    notes.push("가격 관련 옵션과 입력값은 유지되지만 미리보기에는 적용되지 않습니다.");
+  } else if (state.layout === "compact") {
     notes.push(state.service === "vintage" ? "compact 구매는 컨디션 배지와 이전 가격 없이 현재 판매 가격만 표시합니다." : "compact 렌트는 기간 단위가 가격 뒤에 붙습니다.");
   } else {
     notes.push(state.service === "vintage" ? "구매는 컨디션 배지와 일반 판매 가격을 사용하며, 할인율이 현재 가격 왼쪽에 표시됩니다." : "렌트는 기간 단위가 가격 뒤에 붙습니다.");
@@ -476,14 +482,21 @@ function updateLogic() {
 function updateIrrelevantControls() {
   const noInfo = state.brand === "no brand" && state.product === "no product";
   const isCompact = state.layout === "compact";
+  const noPrice = !state.priceVisible || noInfo;
   const previousPriceControl = document.querySelector('[data-option="previousPrice"]');
-  previousPriceControl.classList.toggle("is-irrelevant", isCompact || state.service !== "vintage" || noInfo);
-  previousPriceControl.querySelector("input").disabled = isCompact;
-  ["propNew", "sale"].forEach((name) => {
-    document.querySelector(`[data-option="${name}"]`).classList.toggle("is-irrelevant", noInfo);
-  });
+  previousPriceControl.classList.toggle("is-irrelevant", isCompact || state.service !== "vintage" || noPrice);
+  previousPriceControl.querySelector("input").disabled = isCompact || noPrice;
+  document.querySelector('[data-option="propNew"]').classList.toggle("is-irrelevant", noInfo);
+  const saleControl = document.querySelector('[data-option="sale"]');
+  saleControl.classList.toggle("is-irrelevant", noPrice);
+  saleControl.querySelector("input").disabled = noPrice;
+  document.querySelector('[data-option="priceVisible"]').classList.toggle("is-irrelevant", noInfo);
   document.querySelector('[data-option="heart"]').classList.toggle("is-irrelevant", isCompact);
   document.querySelector('[data-option="sticker"]').classList.toggle("is-irrelevant", isCompact || noInfo);
+  document.querySelectorAll("[data-price-field]").forEach((label) => {
+    label.classList.toggle("is-irrelevant", noPrice);
+    label.querySelector("input").disabled = noPrice;
+  });
 }
 
 function render() {
@@ -491,7 +504,7 @@ function render() {
   codeOutput.innerHTML = highlightedCode();
   stage.dataset.layout = state.layout;
   document.querySelector(".measure-x span").textContent = `${layoutWidths[state.layout]} px`;
-  stateSummary.textContent = `${state.layout} · ${state.service} · ${state.brand} · ${state.product}${state.soldOut ? " · sold out" : ""}`;
+  stateSummary.textContent = `${state.layout} · ${state.service} · ${state.brand} · ${state.product}${state.priceVisible ? "" : " · no price"}${state.soldOut ? " · sold out" : ""}`;
   document.querySelector("#serviceDot").classList.toggle("vintage", state.service === "vintage");
   updateLogic();
   updateIrrelevantControls();

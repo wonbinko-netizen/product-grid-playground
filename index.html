@@ -9,7 +9,7 @@
     />
     <title>Product Item · Playground</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101113%22/><path d=%22M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z%22 fill=%22white%22/></svg>" />
-    <link rel="stylesheet" href="./styles.css?v=20260721-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260721-4" />
   </head>
   <body>
     <header class="topbar">
@@ -163,6 +163,11 @@
                 <input type="checkbox" name="propNew" checked />
                 <i aria-hidden="true"></i>
               </label>
+              <label class="switch-row" data-option="priceVisible">
+                <span><strong>가격 표시</strong><small>priceVisible</small></span>
+                <input type="checkbox" name="priceVisible" checked />
+                <i aria-hidden="true"></i>
+              </label>
               <label class="switch-row" data-option="sale">
                 <span><strong>할인율</strong><small>sale</small></span>
                 <input type="checkbox" name="sale" checked />
@@ -185,10 +190,10 @@
               <div class="field-grid">
                 <label>브랜드명<input name="brandName" value="브랜드명" /></label>
                 <label>상품명<input name="productName" value="상품명 한줄" /></label>
-                <label>판매가<input name="price" value="1,290,000원" /></label>
-                <label>이전 가격<input name="originalPrice" value="1,590,000원" /></label>
-                <label>할인율<input name="discount" value="19%" /></label>
-                <label>렌트 기간<input name="period" value="/30일" /></label>
+                <label data-price-field>판매가<input name="price" value="1,290,000원" /></label>
+                <label data-price-field>이전 가격<input name="originalPrice" value="1,590,000원" /></label>
+                <label data-price-field>할인율<input name="discount" value="19%" /></label>
+                <label data-price-field>렌트 기간<input name="period" value="/30일" /></label>
                 <label>컨디션<input name="condition" value="VERY_GOOD" /></label>
                 <label>이벤트 라벨<input name="eventLabel" value="타임세일" /></label>
               </div>
@@ -501,6 +506,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다.</div>
-    <script src="./app.js?v=20260721-1"></script>
+    <script src="./app.js?v=20260721-4"></script>
   </body>
 </html>
