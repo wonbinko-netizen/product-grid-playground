@@ -61,6 +61,67 @@ const gridLayouts = {
     columnGap: 8,
     rowGap: 32,
   },
+  swipe1: {
+    label: "상품 1개 스와이프",
+    mode: "swipe",
+    columns: 1,
+    itemCount: 2,
+    visibleCount: 1,
+    cardLayout: "big",
+    columnGap: 14,
+    rowGap: 0,
+  },
+  swipe2: {
+    label: "상품 2개 스와이프",
+    mode: "swipe",
+    columns: 2,
+    itemCount: 3,
+    visibleCount: 2,
+    cardLayout: "smedium",
+    columnGap: 14,
+    rowGap: 0,
+  },
+  swipe3: {
+    label: "상품 3개 스와이프",
+    mode: "swipe",
+    columns: 3,
+    itemCount: 4,
+    visibleCount: 3,
+    cardLayout: "small",
+    columnGap: 8,
+    rowGap: 0,
+  },
+  list: {
+    label: "상품 리스트",
+    mode: "list",
+    columns: 1,
+    itemCount: 3,
+    cardLayout: "horizontal",
+    columnGap: 0,
+    rowGap: 22,
+  },
+  listSwipe: {
+    label: "리스트 스와이프",
+    mode: "swipe-list",
+    columns: 1,
+    itemCount: 8,
+    visibleCount: 4,
+    groupSize: 4,
+    cardLayout: "compact",
+    columnGap: 24,
+    rowGap: 32,
+  },
+  brandSwipe: {
+    label: "브랜드 스와이프",
+    mode: "brand-swipe",
+    columns: 1,
+    itemCount: 2,
+    visibleCount: 1,
+    cardLayout: "brand",
+    columnGap: 14,
+    rowGap: 0,
+    serviceLocked: "rent",
+  },
 };
 
 const layoutWidths = {
@@ -369,17 +430,34 @@ function cardTemplate(s = state) {
   `;
 }
 
+function brandCardTemplate(index = 0) {
+  const brandName = state.brandName === defaults.brandName ? "브랜드명_한글" : state.brandName;
+  return `
+    <article class="brand-swipe-card" aria-label="브랜드 카드 ${index + 1}">
+      <strong class="brand-swipe-name">${escapeHtml(brandName)}</strong>
+      <span class="brand-swipe-image" aria-hidden="true"></span>
+      <div class="brand-swipe-price"><span>일</span><strong>NN,NNN원부터</strong></div>
+    </article>
+  `;
+}
+
 function gridPropsObject() {
   const config = gridLayouts[gridState.grid];
-  return {
+  const effectiveService = config.serviceLocked || gridState.service;
+  const props = {
     type: gridState.grid,
-    service: gridState.service,
+    service: effectiveService,
+    mode: config.mode || "grid",
     columns: config.columns,
     itemCount: config.itemCount,
     columnGap: config.columnGap,
     rowGap: config.rowGap,
     cardLayout: config.cardLayout,
   };
+  if (config.visibleCount) props.visibleCount = config.visibleCount;
+  if (config.groupSize) props.groupSize = config.groupSize;
+  if (config.serviceLocked) props.serviceLocked = true;
+  return props;
 }
 
 function gridRawCode() {
@@ -401,25 +479,54 @@ function gridHighlightedCode() {
 
 function updateGridLogic() {
   const config = gridLayouts[gridState.grid];
-  const serviceLabel = gridState.service === "rent" ? "렌트" : "구매";
-  const common = `현재 ${serviceLabel} 상품 카드를 사용합니다. 모바일 375px 기준 좌우 16px 패딩, 콘텐츠 너비 343px을 사용합니다. ${config.columns}열 카드 사이 간격은 ${config.columnGap}px, 줄 사이는 ${config.rowGap}px입니다.`;
-  const detail = gridState.grid === "grid1"
-    ? "상품은 최대 5개까지 노출하며 이미지 옵션·랭킹 옵션·전체 보기 버튼을 사용하지 않습니다."
-    : gridState.grid === "grid2"
-      ? "상품은 최소 4개부터 짝수 단위로 노출하며 랭킹 옵션을 사용하지 않습니다."
-      : "상품은 최소 6개부터 3의 배수 단위로 노출하며 천만원대 상품 노출은 지양합니다.";
+  const effectiveService = config.serviceLocked || gridState.service;
+  const serviceLabel = effectiveService === "rent" ? "렌트" : "구매";
+  const common = `현재 ${serviceLabel} 상품 카드를 사용합니다. 모바일 375px 기준 좌측 16px에서 시작합니다.`;
+  const details = {
+    grid1: "콘텐츠 너비는 343px입니다. 상품은 최대 5개까지 노출하며 이미지 옵션·랭킹 옵션·전체 보기 버튼을 사용하지 않습니다.",
+    grid2: "163px 카드 2개를 17px 간격으로 배치합니다. 상품은 최소 4개부터 짝수 단위로 노출하며 랭킹 옵션을 사용하지 않습니다.",
+    grid3: "109px 카드 3개를 8px 간격으로 배치하고 줄 사이는 32px입니다. 상품은 최소 6개부터 3의 배수 단위로 노출하며 천만원대 상품 노출은 지양합니다.",
+    swipe1: "250px 카드 사이 간격은 14px입니다. 한 화면에 1개와 다음 카드 일부를 노출하고 가로 스와이프를 사용합니다. 1줄 고정이며 상품은 최소 3개 이상입니다. 이미지·랭킹 옵션은 사용하지 않습니다.",
+    swipe2: "156px 카드 사이 간격은 14px입니다. 한 화면에 2개와 다음 카드 일부를 노출하고 가로 스와이프를 사용합니다. 하단 그리드를 추가할 경우 최대 2줄이며 상품은 최소 4개 이상입니다.",
+    swipe3: "109px 카드 사이 간격은 8px입니다. 한 화면에 3개와 다음 카드 일부를 노출하고 가로 스와이프를 사용합니다. 하단 그리드를 추가할 경우 최대 2줄이며 상품은 최소 6개 이상입니다.",
+    list: "125px 이미지의 horizontal 카드를 세로로 배치하며 카드 사이는 22px입니다. 상품은 최소 3개, 최대 10개까지 노출합니다.",
+    listSwipe: "72px 이미지의 compact 카드를 4개씩 묶고 카드 사이는 32px, 스와이프 묶음 사이는 24px입니다. 상품은 최소 8개부터 4의 배수로 노출하며 최대 3개 묶음까지 사용합니다. 이미지 옵션은 사용하지 않습니다.",
+    brandSwipe: "184px 브랜드 카드를 14px 간격으로 배치하는 렌트 전용 1줄 스와이프입니다. 브랜드는 최소 4개 이상 노출하며 이미지·랭킹·타임딜 옵션과 더 보기 버튼을 사용하지 않습니다.",
+  };
+  const detail = details[gridState.grid];
   gridLogicText.textContent = `${common} ${detail}`;
 }
 
 function renderGrid() {
   const config = gridLayouts[gridState.grid];
-  const serviceLabel = gridState.service === "rent" ? "렌트" : "구매";
-  const cardState = { ...state, service: gridState.service, layout: config.cardLayout };
-  const cards = Array.from({ length: config.itemCount }, () => cardTemplate(cardState)).join("");
-  gridPreview.innerHTML = `<section class="product-grid-template ${gridState.grid}" aria-label="${config.label} 미리보기">${cards}</section>`;
+  if (config.serviceLocked && gridState.service !== config.serviceLocked) {
+    gridState.service = config.serviceLocked;
+    gridForm.elements.service.value = config.serviceLocked;
+  }
+  const purchaseServiceControl = gridForm.querySelector('[name="service"][value="vintage"]');
+  purchaseServiceControl.disabled = Boolean(config.serviceLocked);
+  document.querySelector("#gridServiceFieldset").classList.toggle("is-locked", Boolean(config.serviceLocked));
+  const effectiveService = config.serviceLocked || gridState.service;
+  const serviceLabel = effectiveService === "rent" ? "렌트" : "구매";
+  const cardState = { ...state, service: effectiveService, layout: config.cardLayout };
+  let content = "";
+  if (config.mode === "brand-swipe") {
+    content = Array.from({ length: config.itemCount }, (_, index) => brandCardTemplate(index)).join("");
+  } else if (config.groupSize) {
+    const cards = Array.from({ length: config.itemCount }, () => cardTemplate(cardState));
+    const groups = [];
+    for (let i = 0; i < cards.length; i += config.groupSize) {
+      groups.push(`<div class="list-swipe-column">${cards.slice(i, i + config.groupSize).join("")}</div>`);
+    }
+    content = `<div class="list-swipe-track">${groups.join("")}</div>`;
+  } else {
+    content = Array.from({ length: config.itemCount }, () => cardTemplate(cardState)).join("");
+  }
+  gridPreview.innerHTML = `<section class="product-grid-template ${gridState.grid}" aria-label="${config.label} 미리보기">${content}</section>`;
   gridPreviewStage.dataset.grid = gridState.grid;
   gridCodeOutput.innerHTML = gridHighlightedCode();
-  gridStateSummary.textContent = `${config.label} · ${serviceLabel} · ${config.columns} column${config.columns > 1 ? "s" : ""} · ${config.itemCount} item${config.itemCount > 1 ? "s" : ""}`;
+  const exposure = config.visibleCount ? `${config.visibleCount} visible · ${config.itemCount} rendered` : `${config.columns} column${config.columns > 1 ? "s" : ""} · ${config.itemCount} item${config.itemCount > 1 ? "s" : ""}`;
+  gridStateSummary.textContent = `${config.label} · ${serviceLabel} · ${exposure}`;
   updateGridLogic();
 }
 

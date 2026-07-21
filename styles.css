@@ -534,6 +534,28 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
   font-size: 9px;
   font-weight: 700;
 }
+.grid-option-group + .grid-option-group { margin-top: 18px; }
+.grid-option-group-title {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #3e4348;
+  font-size: 10px;
+  font-weight: 750;
+}
+.grid-option-group-title span {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  background: #f1f2f4;
+  color: #9a9ea4;
+  font-size: 8px;
+}
 .grid-layout-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .grid-layout-option { min-width: 0; cursor: pointer; }
 .grid-layout-option input { position: absolute; opacity: 0; pointer-events: none; }
@@ -565,6 +587,18 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .diagram-one { grid-template-columns: 1fr; }
 .diagram-two { grid-template-columns: repeat(2, 1fr); }
 .diagram-three { grid-template-columns: repeat(3, 1fr); }
+.diagram-swipe-one,
+.diagram-swipe-two,
+.diagram-swipe-three { display: flex; overflow: hidden; }
+.diagram-swipe-one i { flex: 0 0 72%; }
+.diagram-swipe-two i { flex: 0 0 42%; }
+.diagram-swipe-three i { flex: 0 0 29%; }
+.diagram-list { grid-template-columns: 17px 1fr; grid-template-rows: repeat(3, 1fr); }
+.diagram-list i { grid-column: 1 / -1; background: linear-gradient(90deg, #d6dbe3 0 17px, transparent 17px 21px, #d6dbe3 21px); }
+.diagram-list-swipe { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+.diagram-list-swipe i { background: linear-gradient(90deg, #d6dbe3 0 9px, transparent 9px 12px, #d6dbe3 12px); }
+.diagram-brand-swipe { display: flex; overflow: hidden; }
+.diagram-brand-swipe i { flex: 0 0 58%; border-radius: 5px; box-shadow: inset 0 0 0 1px #cdd2da; }
 .grid-option-card strong { font-size: 9px; line-height: 1.35; letter-spacing: -.02em; }
 .grid-option-card small { margin-top: 4px; color: #9a9ea4; font-size: 8px; line-height: 1.35; }
 .linked-card-note {
@@ -582,6 +616,15 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .linked-card-note > span { color: var(--green); font-weight: 800; }
 .linked-card-note p { margin: 0; }
 .linked-card-note strong { color: #34383c; }
+#gridServiceFieldset.is-locked { background: #fbfbfc; }
+#gridServiceFieldset.is-locked::after {
+  content: "브랜드 스와이프는 렌트 전용";
+  display: block;
+  margin: 9px 24px 0;
+  color: #8f949b;
+  font-size: 9px;
+}
+#gridServiceFieldset.is-locked .segmented label:last-child { opacity: .35; cursor: not-allowed; }
 
 .grid-preview-panel { min-height: 836px; }
 .grid-preview-stage { min-height: 692px; padding: 36px 20px; align-items: flex-start; }
@@ -597,6 +640,57 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .product-grid-template.grid1 { grid-template-columns: 343px; column-gap: 0; row-gap: 20px; }
 .product-grid-template.grid2 { grid-template-columns: repeat(2, 163px); column-gap: 17px; row-gap: 32px; }
 .product-grid-template.grid3 { grid-template-columns: repeat(3, 109px); column-gap: 8px; row-gap: 32px; }
+.product-grid-template.swipe1,
+.product-grid-template.swipe2,
+.product-grid-template.swipe3 {
+  padding-right: 0;
+  display: flex;
+  overflow: hidden;
+  align-items: flex-start;
+}
+.product-grid-template.swipe1 { gap: 14px; }
+.product-grid-template.swipe2 { gap: 14px; }
+.product-grid-template.swipe3 { gap: 8px; }
+.product-grid-template.swipe1 .product-card,
+.product-grid-template.swipe2 .product-card,
+.product-grid-template.swipe3 .product-card { flex: none; }
+.product-grid-template.swipe1 { padding: 36px 0 36px 16px; }
+.product-grid-template.list { grid-template-columns: 343px; column-gap: 0; row-gap: 22px; }
+.product-grid-template.listSwipe {
+  padding: 20px 0 20px 16px;
+  display: block;
+  overflow: hidden;
+}
+.list-swipe-track { display: flex; align-items: flex-start; gap: 24px; width: max-content; }
+.list-swipe-column { width: 266px; display: flex; flex-direction: column; gap: 32px; flex: none; }
+.product-grid-template.listSwipe .product-card.compact { width: 266px; padding-right: 0; }
+.product-grid-template.listSwipe .product-card.compact .product-info { width: 180px; }
+.product-grid-template.brandSwipe {
+  padding: 20px 0 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  overflow: hidden;
+}
+.brand-swipe-card {
+  width: 184px;
+  min-height: 230px;
+  padding: 20px 16px;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 12px 1px rgba(159,162,186,.14);
+  color: #111;
+}
+.brand-swipe-name { width: 100%; overflow: hidden; font-size: 16px; line-height: 1; text-overflow: ellipsis; white-space: nowrap; }
+.brand-swipe-image { width: 110px; height: 110px; margin: 0 auto; display: block; flex: none; }
+.brand-swipe-price { width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 2px; font-size: 18px; line-height: 1; letter-spacing: -.01em; white-space: nowrap; }
+.brand-swipe-price strong { color: #ee3678; }
 .grid-dot { background: #2f76df; }
 
 .output-panel { padding-bottom: 20px; }

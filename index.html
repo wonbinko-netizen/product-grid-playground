@@ -9,7 +9,7 @@
     />
     <title>Product Item · Playground</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101113%22/><path d=%22M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z%22 fill=%22white%22/></svg>" />
-    <link rel="stylesheet" href="./styles.css?v=20260721-4" />
+    <link rel="stylesheet" href="./styles.css?v=20260721-6" />
   </head>
   <body>
     <header class="topbar">
@@ -402,36 +402,102 @@
 
             <form id="gridControlsForm">
               <fieldset class="control-section grid-selector-section">
-                <legend>그리드 <span class="option-count">3</span></legend>
-                <div class="grid-layout-options" role="radiogroup" aria-label="상품 그리드">
-                  <label class="grid-layout-option">
-                    <input type="radio" name="grid" value="grid1" checked />
-                    <span class="grid-option-card">
-                      <span class="grid-option-diagram diagram-one" aria-hidden="true"><i></i></span>
-                      <strong>상품 1개 그리드</strong>
-                      <small>1단 · 한 줄 1개</small>
-                    </span>
-                  </label>
-                  <label class="grid-layout-option">
-                    <input type="radio" name="grid" value="grid2" />
-                    <span class="grid-option-card">
-                      <span class="grid-option-diagram diagram-two" aria-hidden="true"><i></i><i></i></span>
-                      <strong>상품 2개 그리드</strong>
-                      <small>2단 · 한 줄 2개</small>
-                    </span>
-                  </label>
-                  <label class="grid-layout-option">
-                    <input type="radio" name="grid" value="grid3" />
-                    <span class="grid-option-card">
-                      <span class="grid-option-diagram diagram-three" aria-hidden="true"><i></i><i></i><i></i></span>
-                      <strong>상품 3개 그리드</strong>
-                      <small>3단 · 한 줄 3개</small>
-                    </span>
-                  </label>
+                <legend>레이아웃 <span class="option-count">9</span></legend>
+                <div class="grid-option-group">
+                  <p class="grid-option-group-title">그리드 <span>3</span></p>
+                  <div class="grid-layout-options" role="radiogroup" aria-label="상품 그리드">
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="grid1" checked />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-one" aria-hidden="true"><i></i></span>
+                        <strong>상품 1개 그리드</strong>
+                        <small>1단 · 한 줄 1개</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="grid2" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-two" aria-hidden="true"><i></i><i></i></span>
+                        <strong>상품 2개 그리드</strong>
+                        <small>2단 · 한 줄 2개</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="grid3" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-three" aria-hidden="true"><i></i><i></i><i></i></span>
+                        <strong>상품 3개 그리드</strong>
+                        <small>3단 · 한 줄 3개</small>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="grid-option-group">
+                  <p class="grid-option-group-title">스와이프 <span>3</span></p>
+                  <div class="grid-layout-options" role="radiogroup" aria-label="상품 스와이프">
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="swipe1" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-swipe-one" aria-hidden="true"><i></i><i></i></span>
+                        <strong>상품 1개 스와이프</strong>
+                        <small>1개 노출 · 가로 스와이프</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="swipe2" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-swipe-two" aria-hidden="true"><i></i><i></i><i></i></span>
+                        <strong>상품 2개 스와이프</strong>
+                        <small>2개 노출 · 가로 스와이프</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="swipe3" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-swipe-three" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                        <strong>상품 3개 스와이프</strong>
+                        <small>3개 노출 · 가로 스와이프</small>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="grid-option-group">
+                  <p class="grid-option-group-title">리스트 <span>2</span></p>
+                  <div class="grid-layout-options" role="radiogroup" aria-label="상품 리스트">
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="list" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-list" aria-hidden="true"><i></i><i></i><i></i></span>
+                        <strong>상품 리스트</strong>
+                        <small>세로 리스트 · 최소 3개</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="listSwipe" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-list-swipe" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                        <strong>리스트 스와이프</strong>
+                        <small>4개씩 · 가로 스와이프</small>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="grid-option-group">
+                  <p class="grid-option-group-title">특수형 <span>1</span></p>
+                  <div class="grid-layout-options" role="radiogroup" aria-label="특수 상품 레이아웃">
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="brandSwipe" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-brand-swipe" aria-hidden="true"><i></i><i></i></span>
+                        <strong>브랜드 스와이프</strong>
+                        <small>렌트 전용 · 브랜드 카드</small>
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </fieldset>
 
-              <fieldset class="control-section">
+              <fieldset class="control-section" id="gridServiceFieldset">
                 <legend>서비스 타입</legend>
                 <div class="segmented" role="radiogroup" aria-label="상품 그리드 서비스 타입">
                   <label>
@@ -506,6 +572,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다.</div>
-    <script src="./app.js?v=20260721-4"></script>
+    <script src="./app.js?v=20260721-6"></script>
   </body>
 </html>
