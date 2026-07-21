@@ -9,7 +9,7 @@
     />
     <title>Product Item · Playground</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23101113%22/><path d=%22M8 8h6v6H8zm10 0h6v6h-6zM8 18h6v6H8zm10 0h6v6h-6z%22 fill=%22white%22/></svg>" />
-    <link rel="stylesheet" href="./styles.css?v=20260721-6" />
+    <link rel="stylesheet" href="./styles.css?v=20260721-8" />
   </head>
   <body>
     <header class="topbar">
@@ -402,7 +402,7 @@
 
             <form id="gridControlsForm">
               <fieldset class="control-section grid-selector-section">
-                <legend>레이아웃 <span class="option-count">9</span></legend>
+                <legend>레이아웃 <span class="option-count">11</span></legend>
                 <div class="grid-option-group">
                   <p class="grid-option-group-title">그리드 <span>3</span></p>
                   <div class="grid-layout-options" role="radiogroup" aria-label="상품 그리드">
@@ -483,7 +483,7 @@
                   </div>
                 </div>
                 <div class="grid-option-group">
-                  <p class="grid-option-group-title">특수형 <span>1</span></p>
+                  <p class="grid-option-group-title">특수형 <span>3</span></p>
                   <div class="grid-layout-options" role="radiogroup" aria-label="특수 상품 레이아웃">
                     <label class="grid-layout-option">
                       <input type="radio" name="grid" value="brandSwipe" />
@@ -491,6 +491,22 @@
                         <span class="grid-option-diagram diagram-brand-swipe" aria-hidden="true"><i></i><i></i></span>
                         <strong>브랜드 스와이프</strong>
                         <small>렌트 전용 · 브랜드 카드</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="pick" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-pick" aria-hidden="true"><i></i><i></i><i></i></span>
+                        <strong>Pick</strong>
+                        <small>배경 선택 · 3개 캐러셀</small>
+                      </span>
+                    </label>
+                    <label class="grid-layout-option">
+                      <input type="radio" name="grid" value="superdeal" />
+                      <span class="grid-option-card">
+                        <span class="grid-option-diagram diagram-superdeal" aria-hidden="true"><i></i><i></i></span>
+                        <strong>Superdeal</strong>
+                        <small>배경 이미지 · 상품 스와이프</small>
                       </span>
                     </label>
                   </div>
@@ -508,6 +524,48 @@
                     <input type="radio" name="service" value="vintage" />
                     <span>구매</span>
                   </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="control-section pick-controls" id="pickControls" hidden>
+                <legend>Pick 배경색 <span class="option-count">13</span></legend>
+                <p class="pick-color-help">지정된 색상만 선택할 수 있으며 텍스트 색상은 자동으로 바뀝니다.</p>
+                <div class="pick-color-group">
+                  <span>밝은 텍스트</span>
+                  <div class="pick-color-options" role="radiogroup" aria-label="어두운 Pick 배경색">
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#ff6b6d" /><span><i style="--swatch:#ff6b6d"></i><small>#FF6B6D</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#18b17b" /><span><i style="--swatch:#18b17b"></i><small>#18B17B</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#6e92ff" /><span><i style="--swatch:#6e92ff"></i><small>#6E92FF</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#9f73f6" /><span><i style="--swatch:#9f73f6"></i><small>#9F73F6</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#b5bfcd" /><span><i style="--swatch:#b5bfcd"></i><small>#B5BFCD</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#292a2d" checked /><span><i style="--swatch:#292a2d"></i><small>#292A2D</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#625240" /><span><i style="--swatch:#625240"></i><small>#625240</small></span></label>
+                  </div>
+                </div>
+                <div class="pick-color-group">
+                  <span>어두운 텍스트</span>
+                  <div class="pick-color-options" role="radiogroup" aria-label="밝은 Pick 배경색">
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#ffbe74" /><span><i style="--swatch:#ffbe74"></i><small>#FFBE74</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#ffd27e" /><span><i style="--swatch:#ffd27e"></i><small>#FFD27E</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#feec9a" /><span><i style="--swatch:#feec9a"></i><small>#FEEC9A</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#6adab7" /><span><i style="--swatch:#6adab7"></i><small>#6ADAB7</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#aad9ff" /><span><i style="--swatch:#aad9ff"></i><small>#AAD9FF</small></span></label>
+                    <label class="pick-color-option"><input type="radio" name="pickBackground" value="#ffbce5" /><span><i style="--swatch:#ffbce5"></i><small>#FFBCE5</small></span></label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="control-section superdeal-controls" id="superdealControls" hidden>
+                <legend>Superdeal 배경 이미지 <span class="option-count">7</span></legend>
+                <p class="pick-color-help">페이지에 포함된 지정 이미지 중 하나를 선택할 수 있으며 텍스트 색상은 자동으로 바뀝니다.</p>
+                <div class="superdeal-image-options" role="radiogroup" aria-label="Superdeal 배경 이미지">
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="mint-pink" checked /><span><img src="./assets/superdeal/mint-pink.png" alt="" /><small>민트 핑크</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="pink-lilac" /><span><img src="./assets/superdeal/pink-lilac.png" alt="" /><small>핑크 라일락</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="black-leather" /><span><img src="./assets/superdeal/black-leather.png" alt="" /><small>블랙 레더</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="blue-fabric" /><span><img src="./assets/superdeal/blue-fabric.png" alt="" /><small>블루 패브릭</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="black-satin" /><span><img src="./assets/superdeal/black-satin.png" alt="" /><small>블랙 새틴</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="blue-texture" /><span><img src="./assets/superdeal/blue-texture.png" alt="" /><small>블루 텍스처</small></span></label>
+                  <label class="superdeal-image-option"><input type="radio" name="superdealBackground" value="rainbow-gradient" /><span><img src="./assets/superdeal/rainbow-gradient.png" alt="" /><small>레인보우</small></span></label>
                 </div>
               </fieldset>
 
@@ -572,6 +630,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다.</div>
-    <script src="./app.js?v=20260721-6"></script>
+    <script src="./app.js?v=20260721-8"></script>
   </body>
 </html>

@@ -599,6 +599,18 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .diagram-list-swipe i { background: linear-gradient(90deg, #d6dbe3 0 9px, transparent 9px 12px, #d6dbe3 12px); }
 .diagram-brand-swipe { display: flex; overflow: hidden; }
 .diagram-brand-swipe i { flex: 0 0 58%; border-radius: 5px; box-shadow: inset 0 0 0 1px #cdd2da; }
+.diagram-pick { display: flex; align-items: center; justify-content: center; overflow: hidden; background: #292a2d; }
+.diagram-pick i { flex: 0 0 31%; height: 73%; border-radius: 5px; background: #fff; }
+.diagram-pick i:nth-child(2) { flex-basis: 40%; height: 92%; }
+.diagram-superdeal {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  overflow: hidden;
+  background: url('./assets/superdeal/mint-pink.png') center / cover no-repeat;
+}
+.diagram-superdeal i { flex: 0 0 68%; height: 77%; border-radius: 5px 5px 0 0; background: #fff; }
+.diagram-superdeal i:last-child { flex-basis: 40%; }
 .grid-option-card strong { font-size: 9px; line-height: 1.35; letter-spacing: -.02em; }
 .grid-option-card small { margin-top: 4px; color: #9a9ea4; font-size: 8px; line-height: 1.35; }
 .linked-card-note {
@@ -625,6 +637,29 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
   font-size: 9px;
 }
 #gridServiceFieldset.is-locked .segmented label:last-child { opacity: .35; cursor: not-allowed; }
+.pick-controls { padding-bottom: 22px; }
+.pick-controls legend { display: flex; align-items: center; gap: 7px; }
+.pick-color-help { margin: 0 24px 14px; color: #8f949b; font-size: 9px; line-height: 1.5; }
+.pick-color-group + .pick-color-group { margin-top: 16px; }
+.pick-color-group > span { display: block; margin: 0 24px 8px; color: #555b61; font-size: 9px; font-weight: 750; }
+.pick-color-options { margin: 0 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.pick-color-option { min-width: 0; cursor: pointer; }
+.pick-color-option input { position: absolute; opacity: 0; pointer-events: none; }
+.pick-color-option > span { padding: 5px; display: flex; flex-direction: column; gap: 5px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.pick-color-option i { width: 100%; aspect-ratio: 1; display: block; border-radius: 6px; background: var(--swatch); }
+.pick-color-option small { overflow: hidden; color: #858a91; font: 7px/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; text-overflow: ellipsis; }
+.pick-color-option input:checked + span { border-color: #2f76df; box-shadow: 0 0 0 1px #2f76df; }
+.pick-color-option input:focus-visible + span { outline: 3px solid rgba(47,118,223,.22); outline-offset: 2px; }
+.superdeal-controls { padding-bottom: 22px; }
+.superdeal-controls legend { display: flex; align-items: center; gap: 7px; }
+.superdeal-image-options { margin: 0 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.superdeal-image-option { min-width: 0; cursor: pointer; }
+.superdeal-image-option input { position: absolute; opacity: 0; pointer-events: none; }
+.superdeal-image-option > span { padding: 5px; display: flex; flex-direction: column; gap: 5px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.superdeal-image-option img { width: 100%; aspect-ratio: 343 / 527; display: block; border-radius: 6px; object-fit: cover; }
+.superdeal-image-option small { overflow: hidden; color: #858a91; font-size: 7px; line-height: 1.2; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.superdeal-image-option input:checked + span { border-color: #2f76df; box-shadow: 0 0 0 1px #2f76df; }
+.superdeal-image-option input:focus-visible + span { outline: 3px solid rgba(47,118,223,.22); outline-offset: 2px; }
 
 .grid-preview-panel { min-height: 836px; }
 .grid-preview-stage { min-height: 692px; padding: 36px 20px; align-items: flex-start; }
@@ -691,6 +726,86 @@ main { width: min(1540px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; 
 .brand-swipe-image { width: 110px; height: 110px; margin: 0 auto; display: block; flex: none; }
 .brand-swipe-price { width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 2px; font-size: 18px; line-height: 1; letter-spacing: -.01em; white-space: nowrap; }
 .brand-swipe-price strong { color: #ee3678; }
+.product-grid-template.pick { padding: 0; display: block; overflow: hidden; background: transparent; }
+.pick-template {
+  width: 375px;
+  height: 603px;
+  padding: 20px 0 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--pick-bg);
+  color: var(--pick-main);
+  transition: background-color .22s ease, color .22s ease;
+}
+.pick-header { width: 375px; height: 129px; display: flex; flex: none; flex-direction: column; align-items: center; }
+.pick-heading { width: 100%; height: 89px; padding: 20px 60px; display: flex; flex-direction: column; align-items: center; gap: 11px; text-align: center; }
+.pick-heading strong,
+.pick-heading span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-heading strong { color: var(--pick-main); font-size: 22px; line-height: 1; }
+.pick-heading span { color: var(--pick-sub); font-size: 16px; line-height: 1; }
+.pick-view-all { width: 119px; height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid currentColor; border-radius: 100px; background: transparent; color: var(--pick-main); font-size: 16px; font-weight: 650; cursor: pointer; }
+.pick-view-all i { width: 14px; height: 14px; display: block; background: currentColor; mask: url('./assets/chevron-right.svg') center / 14px 14px no-repeat; -webkit-mask: url('./assets/chevron-right.svg') center / 14px 14px no-repeat; }
+.pick-carousel { width: 375px; height: 345px; margin-top: 30px; flex: none; overflow: hidden; }
+.pick-carousel-track { width: 650px; height: 345px; display: flex; align-items: center; gap: 14px; transform: translateX(-137.5px); }
+.pick-card { padding-bottom: 6px; display: flex; flex: none; flex-direction: column; gap: 12px; overflow: hidden; border-radius: 18px; background: #fff; color: #111; }
+.pick-card.side { width: 190px; height: 293px; }
+.pick-card.center { width: 242px; height: 345px; }
+.pick-card-media { position: relative; width: 100%; flex: none; overflow: hidden; background: #f9fafc; }
+.pick-card.side .pick-card-media { height: 190px; }
+.pick-card.center .pick-card-media { height: 242px; }
+.pick-card-sold-out { position: absolute; right: 0; bottom: 0; left: 0; height: 35px; display: flex; align-items: center; justify-content: center; background: rgba(17,17,17,.62); color: #fff; font-size: 15px; font-weight: 700; }
+.pick-card.center .pick-card-sold-out { height: 41px; font-size: 17px; }
+.pick-card-info { width: 100%; height: 85px; padding: 0 12px 15px; display: flex; flex-direction: column; gap: 14px; }
+.pick-card-name { width: 100%; height: 38px; display: flex; flex-direction: column; gap: 4px; }
+.pick-card-name strong,
+.pick-card-name span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-card-name strong { font-size: 16px; line-height: 1; font-weight: 650; }
+.pick-card-name span { color: #45474a; font-size: 14px; line-height: 1.3; }
+.pick-card-price { width: 100%; height: 18px; display: flex; align-items: center; gap: 3px; overflow: hidden; white-space: nowrap; }
+.pick-card-discount,
+.pick-card-price strong { font-size: 18px; line-height: 1; font-weight: 750; }
+.pick-card.rent .pick-card-discount { color: #ee3678; }
+.pick-card.vintage .pick-card-discount { color: #036b53; }
+.pick-card-period { color: #9ea1a6; font-size: 16px; line-height: 1; }
+.pick-pagination { position: relative; width: 242px; height: 3px; margin-top: 30px; background: var(--pick-main); opacity: .95; }
+.pick-pagination i { position: absolute; top: 0; left: 50%; width: 24px; height: 3px; transform: translateX(-50%); background: #49495a; }
+.product-grid-template.superdeal { padding: 0; display: block; overflow: hidden; background: transparent; }
+.superdeal-template { width: 375px; height: 543px; padding: 0 16px 16px; background: #fff; }
+.superdeal-shell {
+  position: relative;
+  width: 343px;
+  height: 527px;
+  overflow: hidden;
+  border-radius: 18px;
+  color: var(--superdeal-main);
+}
+.superdeal-background { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+.superdeal-content { position: relative; z-index: 1; height: 100%; padding: 30px 0 36px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.superdeal-heading { width: 100%; height: 38px; padding: 0 60px; display: flex; flex: none; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+.superdeal-heading strong,
+.superdeal-heading span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.superdeal-heading strong { color: var(--superdeal-main); font-size: 22px; line-height: 1; }
+.superdeal-heading span { color: var(--superdeal-sub); font-size: 16px; line-height: 1; }
+.superdeal-carousel { width: 343px; height: 365px; flex: none; overflow: hidden; }
+.superdeal-carousel-track { width: 558px; height: 365px; padding-left: 38px; display: flex; align-items: flex-start; gap: 14px; }
+.superdeal-card { width: 267px; height: 365px; display: flex; flex: none; flex-direction: column; gap: 12px; overflow: hidden; border-radius: 18px; background: #fff; color: #111; }
+.superdeal-card-media { position: relative; width: 267px; height: 268px; flex: none; overflow: hidden; background: #f9fafc; }
+.superdeal-card-sold-out { position: absolute; right: 0; bottom: 0; left: 0; height: 41px; display: flex; align-items: center; justify-content: center; background: rgba(17,17,17,.62); color: #fff; font-size: 17px; font-weight: 700; }
+.superdeal-card-info { width: 267px; height: 85px; padding: 0 12px 15px; display: flex; flex-direction: column; gap: 14px; }
+.superdeal-card-name { width: 100%; height: 38px; display: flex; flex-direction: column; gap: 4px; }
+.superdeal-card-name strong,
+.superdeal-card-name span { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.superdeal-card-name strong { font-size: 16px; line-height: 1; font-weight: 650; }
+.superdeal-card-name span { color: #45474a; font-size: 14px; line-height: 1.3; }
+.superdeal-card-price { width: 100%; height: 18px; display: flex; align-items: center; gap: 3px; overflow: hidden; white-space: nowrap; }
+.superdeal-card-discount,
+.superdeal-card-price strong { font-size: 18px; line-height: 1; font-weight: 750; }
+.superdeal-card.rent .superdeal-card-discount { color: #ee3678; }
+.superdeal-card.vintage .superdeal-card-discount { color: #036b53; }
+.superdeal-card-period { color: #9ea1a6; font-size: 16px; line-height: 1; }
+.superdeal-pagination { position: relative; width: 267px; height: 3px; flex: none; background: rgba(255,255,255,.95); }
+.superdeal-pagination i { position: absolute; top: 0; left: 50%; width: 24px; height: 3px; transform: translateX(-50%); background: #49495a; }
 .grid-dot { background: #2f76df; }
 
 .output-panel { padding-bottom: 20px; }

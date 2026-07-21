@@ -17,7 +17,9 @@ GitHub Pages를 업데이트할 때는 ZIP 안의 `index.html`, `styles.css`, `a
 - 타이틀 템플릿 SHORT / BASIC / CLOCK 타입 전환
 - 우측 옵션 없음 / 카운트 / 전체 보기 조합과 표시 문구 편집
 - 타이틀 템플릿의 Component JSX / Props JSON 및 공유 링크 제공
-- 상품 1개 / 2개 / 3개 그리드, 상품 1개 / 2개 / 3개 스와이프, 상품 리스트 / 리스트 스와이프 / 브랜드 스와이프를 375px 모바일 규격으로 전환
+- 상품 1개 / 2개 / 3개 그리드, 상품 1개 / 2개 / 3개 스와이프, 상품 리스트 / 리스트 스와이프 / 브랜드 스와이프 / Pick / Superdeal을 375px 모바일 규격으로 전환
+- Pick 특수 그리드에서 지정된 13개 배경색을 선택하고 타이틀·버튼·서브 타이틀 색상을 자동 전환
+- Superdeal 특수 그리드에서 페이지에 포함된 7개 배경 이미지를 선택하고 타이틀·서브 타이틀 색상을 자동 전환
 - 상품 카드 탭의 현재 설정을 재사용한 그리드 미리보기
 - 상품 그리드의 Component JSX / Props JSON, 적용 규칙 및 공유 링크 제공
 
@@ -27,3 +29,4 @@ GitHub Pages를 업데이트할 때는 ZIP 안의 `index.html`, `styles.css`, `a
 - `styles.css`: 반응형 UI 및 Product Item·Title Template·Product Grid 스타일
 - `app.js`: 상태 관리, 미리보기, 코드 출력, 공유 링크
 - `assets/chevron-right.svg`: Figma에서 내보낸 전체 보기 화살표
+- `assets/superdeal/`: Figma에서 내보낸 Superdeal 배경 이미지 7종

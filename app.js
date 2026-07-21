@@ -34,7 +34,49 @@ const titleDefaults = {
 const gridDefaults = {
   grid: "grid1",
   service: "rent",
+  pickBackground: "#292a2d",
+  superdealBackground: "mint-pink",
 };
+
+const pickBackgrounds = [
+  "#ff6b6d", "#18b17b", "#6e92ff", "#9f73f6", "#b5bfcd", "#292a2d", "#625240",
+  "#ffbe74", "#ffd27e", "#feec9a", "#6adab7", "#aad9ff", "#ffbce5",
+];
+const pickDarkBackgrounds = new Set(pickBackgrounds.slice(0, 7));
+
+function sanitizePickBackground(value) {
+  const normalized = String(value || "").toLowerCase();
+  return pickBackgrounds.includes(normalized) ? normalized : gridDefaults.pickBackground;
+}
+
+function pickTheme(background) {
+  const safeBackground = sanitizePickBackground(background);
+  const usesLightText = pickDarkBackgrounds.has(safeBackground);
+  return {
+    background: safeBackground,
+    main: usesLightText ? "#ffffff" : "#111111",
+    sub: usesLightText ? "#f8f8f8" : "#333333",
+  };
+}
+
+const superdealBackgrounds = [
+  { key: "mint-pink", label: "민트 핑크", src: "./assets/superdeal/mint-pink.png", dark: false },
+  { key: "pink-lilac", label: "핑크 라일락", src: "./assets/superdeal/pink-lilac.png", dark: false },
+  { key: "black-leather", label: "블랙 레더", src: "./assets/superdeal/black-leather.png", dark: true },
+  { key: "blue-fabric", label: "블루 패브릭", src: "./assets/superdeal/blue-fabric.png", dark: true },
+  { key: "black-satin", label: "블랙 새틴", src: "./assets/superdeal/black-satin.png", dark: true },
+  { key: "blue-texture", label: "블루 텍스처", src: "./assets/superdeal/blue-texture.png", dark: true },
+  { key: "rainbow-gradient", label: "레인보우", src: "./assets/superdeal/rainbow-gradient.png", dark: false },
+];
+
+function superdealTheme(value) {
+  const background = superdealBackgrounds.find((item) => item.key === value) || superdealBackgrounds[0];
+  return {
+    ...background,
+    main: background.dark ? "#ffffff" : "#111111",
+    sub: background.dark ? "#f3f4f6" : "#333333",
+  };
+}
 
 const gridLayouts = {
   grid1: {
@@ -121,6 +163,28 @@ const gridLayouts = {
     columnGap: 14,
     rowGap: 0,
     serviceLocked: "rent",
+  },
+  pick: {
+    label: "Pick",
+    mode: "pick",
+    columns: 3,
+    itemCount: 3,
+    visibleCount: 3,
+    maxItemCount: 15,
+    cardLayout: "pick",
+    columnGap: 14,
+    rowGap: 0,
+  },
+  superdeal: {
+    label: "Superdeal",
+    mode: "superdeal",
+    columns: 1,
+    itemCount: 2,
+    visibleCount: 1,
+    maxItemCount: 15,
+    cardLayout: "superdeal",
+    columnGap: 14,
+    rowGap: 0,
   },
 };
 
@@ -441,6 +505,104 @@ function brandCardTemplate(index = 0) {
   `;
 }
 
+function pickCardTemplate(size, s, index) {
+  const v = getVisibility(s);
+  const brandName = v.hasAnyInfo ? (v.hasBrand ? s.brandName : s.productName) : "콘텐츠 없음";
+  const productName = v.hasBrand && v.hasProduct ? s.productName : "";
+  const currentPrice = escapeHtml(s.price);
+  const period = s.service === "rent" ? `<span class="pick-card-period">${escapeHtml(s.period)}</span>` : "";
+  const discount = s.sale ? `<span class="pick-card-discount">${escapeHtml(s.discount)}</span>` : "";
+  const price = v.showPrice ? `<div class="pick-card-price">${discount}<strong>${currentPrice}</strong>${period}</div>` : "";
+  return `
+    <article class="pick-card ${size} ${s.service}${s.soldOut ? " is-sold-out" : ""}" aria-label="Pick 상품 ${index + 1}">
+      <div class="pick-card-media">
+        ${s.soldOut ? `<span class="pick-card-sold-out">품절</span>` : ""}
+      </div>
+      <div class="pick-card-info">
+        <div class="pick-card-name">
+          <strong>${escapeHtml(brandName)}</strong>
+          ${productName ? `<span>${escapeHtml(productName)}</span>` : ""}
+        </div>
+        ${price}
+      </div>
+    </article>
+  `;
+}
+
+function pickTemplate(cardState) {
+  const theme = pickTheme(gridState.pickBackground);
+  const styles = `--pick-bg:${theme.background};--pick-main:${theme.main};--pick-sub:${theme.sub}`;
+  return `
+    <div class="pick-template" style="${styles}">
+      <header class="pick-header">
+        <div class="pick-heading">
+          <strong>타이틀 한 줄</strong>
+          <span>서브 타이틀 한 줄</span>
+        </div>
+        <button class="pick-view-all" type="button">전체 보기 <i aria-hidden="true"></i></button>
+      </header>
+      <div class="pick-carousel" aria-label="Pick 상품 캐러셀">
+        <div class="pick-carousel-track">
+          ${pickCardTemplate("side", cardState, 0)}
+          ${pickCardTemplate("center", cardState, 1)}
+          ${pickCardTemplate("side", cardState, 2)}
+        </div>
+      </div>
+      <div class="pick-pagination" aria-hidden="true"><i></i></div>
+    </div>
+  `;
+}
+
+function superdealCardTemplate(s, index) {
+  const v = getVisibility(s);
+  const brandName = v.hasAnyInfo ? (v.hasBrand ? s.brandName : s.productName) : "콘텐츠 없음";
+  const productName = v.hasBrand && v.hasProduct ? s.productName : "";
+  const discount = s.sale ? `<span class="superdeal-card-discount">${escapeHtml(s.discount)}</span>` : "";
+  const period = s.service === "rent" ? `<span class="superdeal-card-period">${escapeHtml(s.period)}</span>` : "";
+  const price = v.showPrice
+    ? `<div class="superdeal-card-price">${discount}<strong>${escapeHtml(s.price)}</strong>${period}</div>`
+    : "";
+  return `
+    <article class="superdeal-card ${s.service}${s.soldOut ? " is-sold-out" : ""}" aria-label="Superdeal 상품 ${index + 1}">
+      <div class="superdeal-card-media">
+        ${s.soldOut ? `<span class="superdeal-card-sold-out">품절</span>` : ""}
+      </div>
+      <div class="superdeal-card-info">
+        <div class="superdeal-card-name">
+          <strong>${escapeHtml(brandName)}</strong>
+          ${productName ? `<span>${escapeHtml(productName)}</span>` : ""}
+        </div>
+        ${price}
+      </div>
+    </article>
+  `;
+}
+
+function superdealTemplate(cardState) {
+  const theme = superdealTheme(gridState.superdealBackground);
+  const styles = `--superdeal-main:${theme.main};--superdeal-sub:${theme.sub}`;
+  return `
+    <div class="superdeal-template">
+      <div class="superdeal-shell" style="${styles}">
+        <img class="superdeal-background" src="${theme.src}" alt="" />
+        <div class="superdeal-content">
+          <header class="superdeal-heading">
+            <strong>타이틀 한 줄</strong>
+            <span>서브 타이틀 한 줄</span>
+          </header>
+          <div class="superdeal-carousel" aria-label="Superdeal 상품 캐러셀">
+            <div class="superdeal-carousel-track">
+              ${superdealCardTemplate(cardState, 0)}
+              ${superdealCardTemplate(cardState, 1)}
+            </div>
+          </div>
+          <div class="superdeal-pagination" aria-hidden="true"><i></i></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function gridPropsObject() {
   const config = gridLayouts[gridState.grid];
   const effectiveService = config.serviceLocked || gridState.service;
@@ -457,6 +619,19 @@ function gridPropsObject() {
   if (config.visibleCount) props.visibleCount = config.visibleCount;
   if (config.groupSize) props.groupSize = config.groupSize;
   if (config.serviceLocked) props.serviceLocked = true;
+  if (config.maxItemCount) props.maxItemCount = config.maxItemCount;
+  if (config.mode === "pick") {
+    const theme = pickTheme(gridState.pickBackground);
+    props.background = theme.background;
+    props.titleColor = theme.main;
+    props.subtitleColor = theme.sub;
+  }
+  if (config.mode === "superdeal") {
+    const theme = superdealTheme(gridState.superdealBackground);
+    props.backgroundImage = theme.src;
+    props.titleColor = theme.main;
+    props.subtitleColor = theme.sub;
+  }
   return props;
 }
 
@@ -481,7 +656,11 @@ function updateGridLogic() {
   const config = gridLayouts[gridState.grid];
   const effectiveService = config.serviceLocked || gridState.service;
   const serviceLabel = effectiveService === "rent" ? "렌트" : "구매";
-  const common = `현재 ${serviceLabel} 상품 카드를 사용합니다. 모바일 375px 기준 좌측 16px에서 시작합니다.`;
+  const common = config.mode === "pick"
+    ? `현재 ${serviceLabel} 상품 데이터를 사용하는 375px Pick 캐러셀입니다.`
+    : config.mode === "superdeal"
+      ? `현재 ${serviceLabel} 상품 데이터를 사용하는 375px Superdeal 캐러셀입니다.`
+    : `현재 ${serviceLabel} 상품 카드를 사용합니다. 모바일 375px 기준 좌측 16px에서 시작합니다.`;
   const details = {
     grid1: "콘텐츠 너비는 343px입니다. 상품은 최대 5개까지 노출하며 이미지 옵션·랭킹 옵션·전체 보기 버튼을 사용하지 않습니다.",
     grid2: "163px 카드 2개를 17px 간격으로 배치합니다. 상품은 최소 4개부터 짝수 단위로 노출하며 랭킹 옵션을 사용하지 않습니다.",
@@ -492,6 +671,8 @@ function updateGridLogic() {
     list: "125px 이미지의 horizontal 카드를 세로로 배치하며 카드 사이는 22px입니다. 상품은 최소 3개, 최대 10개까지 노출합니다.",
     listSwipe: "72px 이미지의 compact 카드를 4개씩 묶고 카드 사이는 32px, 스와이프 묶음 사이는 24px입니다. 상품은 최소 8개부터 4의 배수로 노출하며 최대 3개 묶음까지 사용합니다. 이미지 옵션은 사용하지 않습니다.",
     brandSwipe: "184px 브랜드 카드를 14px 간격으로 배치하는 렌트 전용 1줄 스와이프입니다. 브랜드는 최소 4개 이상 노출하며 이미지·랭킹·타임딜 옵션과 더 보기 버튼을 사용하지 않습니다.",
+    pick: "가운데 242px 카드와 양옆 190px 카드로 구성하며 최대 3개를 전시합니다. 배경은 지정된 13개 색상만 사용하고 타이틀·전체 보기·서브 타이틀 색상은 자동 전환됩니다. 타이틀과 서브 타이틀은 각각 한 줄, 좌우 패딩은 60px이며 상품은 최대 15개입니다.",
+    superdeal: "343×527px 배경 이미지 위에 267px 상품 카드를 14px 간격으로 배치합니다. 지정된 7개 이미지는 페이지 파일에 포함되며 배경에 맞춰 타이틀 색상이 자동 전환됩니다. 메인·서브 타이틀은 각각 한 줄, 좌우 패딩은 60px이며 상품은 최대 15개입니다.",
   };
   const detail = details[gridState.grid];
   gridLogicText.textContent = `${common} ${detail}`;
@@ -506,11 +687,17 @@ function renderGrid() {
   const purchaseServiceControl = gridForm.querySelector('[name="service"][value="vintage"]');
   purchaseServiceControl.disabled = Boolean(config.serviceLocked);
   document.querySelector("#gridServiceFieldset").classList.toggle("is-locked", Boolean(config.serviceLocked));
+  document.querySelector("#pickControls").hidden = config.mode !== "pick";
+  document.querySelector("#superdealControls").hidden = config.mode !== "superdeal";
   const effectiveService = config.serviceLocked || gridState.service;
   const serviceLabel = effectiveService === "rent" ? "렌트" : "구매";
   const cardState = { ...state, service: effectiveService, layout: config.cardLayout };
   let content = "";
-  if (config.mode === "brand-swipe") {
+  if (config.mode === "pick") {
+    content = pickTemplate(cardState);
+  } else if (config.mode === "superdeal") {
+    content = superdealTemplate(cardState);
+  } else if (config.mode === "brand-swipe") {
     content = Array.from({ length: config.itemCount }, (_, index) => brandCardTemplate(index)).join("");
   } else if (config.groupSize) {
     const cards = Array.from({ length: config.itemCount }, () => cardTemplate(cardState));
@@ -694,6 +881,8 @@ function stateUrl() {
   if (activeGuide === "grid") {
     url.searchParams.set("grid", gridState.grid);
     url.searchParams.set("service", gridState.service);
+    url.searchParams.set("pickBackground", sanitizePickBackground(gridState.pickBackground));
+    url.searchParams.set("superdealBackground", superdealTheme(gridState.superdealBackground).key);
     Object.entries(state).forEach(([key, value]) => url.searchParams.set(`card_${key}`, String(value)));
   } else {
     Object.entries(activePropsObject()).forEach(([key, value]) => url.searchParams.set(key, String(value)));
@@ -724,7 +913,14 @@ function loadFromUrl() {
     applyState(nextCardState);
     const nextGrid = gridLayouts[params.get("grid")] ? params.get("grid") : gridDefaults.grid;
     const nextService = ["rent", "vintage"].includes(params.get("service")) ? params.get("service") : gridDefaults.service;
-    applyGridState({ grid: nextGrid, service: nextService });
+    const nextPickBackground = sanitizePickBackground(params.get("pickBackground"));
+    const nextSuperdealBackground = superdealTheme(params.get("superdealBackground")).key;
+    applyGridState({
+      grid: nextGrid,
+      service: nextService,
+      pickBackground: nextPickBackground,
+      superdealBackground: nextSuperdealBackground,
+    });
     setActiveGuide("grid");
     return;
   }
