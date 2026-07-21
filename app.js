@@ -19,6 +19,49 @@ const defaults = {
   eventLabel: "타임세일",
 };
 
+const titleDefaults = {
+  type: "short",
+  accessory: "none",
+  title: "큰 타이틀 한 줄",
+  subtitle: "작은 타이틀 한 줄",
+  timer: "04:21:39",
+  currentCount: "1",
+  totalCount: "20",
+  viewAllLabel: "전체 보기",
+};
+
+const gridDefaults = {
+  grid: "grid1",
+  service: "rent",
+};
+
+const gridLayouts = {
+  grid1: {
+    label: "상품 1개 그리드",
+    columns: 1,
+    itemCount: 1,
+    cardLayout: "1grid",
+    columnGap: 0,
+    rowGap: 20,
+  },
+  grid2: {
+    label: "상품 2개 그리드",
+    columns: 2,
+    itemCount: 4,
+    cardLayout: "medium",
+    columnGap: 17,
+    rowGap: 32,
+  },
+  grid3: {
+    label: "상품 3개 그리드",
+    columns: 3,
+    itemCount: 6,
+    cardLayout: "small",
+    columnGap: 8,
+    rowGap: 32,
+  },
+};
+
 const layoutWidths = {
   small: 109,
   smedium: 156,
@@ -39,6 +82,9 @@ const presets = [
 ];
 
 let state = { ...defaults };
+let titleState = { ...titleDefaults };
+let gridState = { ...gridDefaults };
+let activeGuide = "product";
 let activeTab = "jsx";
 let toastTimer;
 
@@ -49,6 +95,17 @@ const codeOutput = document.querySelector("#codeOutput");
 const stateSummary = document.querySelector("#stateSummary");
 const logicText = document.querySelector("#logicText");
 const toast = document.querySelector("#toast");
+const titleForm = document.querySelector("#titleControlsForm");
+const titlePreview = document.querySelector("#titlePreview");
+const titleCodeOutput = document.querySelector("#titleCodeOutput");
+const titleStateSummary = document.querySelector("#titleStateSummary");
+const titleLogicText = document.querySelector("#titleLogicText");
+const gridForm = document.querySelector("#gridControlsForm");
+const gridPreview = document.querySelector("#gridPreview");
+const gridPreviewStage = document.querySelector("#gridPreviewStage");
+const gridCodeOutput = document.querySelector("#gridCodeOutput");
+const gridStateSummary = document.querySelector("#gridStateSummary");
+const gridLogicText = document.querySelector("#gridLogicText");
 
 function escapeHtml(value) {
   return String(value)
@@ -84,6 +141,126 @@ function applyState(nextState) {
     }
   });
   render();
+}
+
+function readTitleForm() {
+  const data = new FormData(titleForm);
+  titleState = Object.fromEntries(Object.entries(titleDefaults).map(([key, defaultValue]) => {
+    const control = titleForm.elements[key];
+    return [key, control instanceof HTMLInputElement && control.disabled ? titleState[key] : (data.get(key) ?? defaultValue)];
+  }));
+}
+
+function applyTitleState(nextState) {
+  titleState = { ...titleDefaults, ...nextState };
+  Object.entries(titleState).forEach(([name, value]) => {
+    const elements = titleForm.elements[name];
+    if (!elements) return;
+    if (elements instanceof RadioNodeList) elements.value = value;
+    else elements.value = value;
+  });
+  renderTitle();
+}
+
+function readGridForm() {
+  const data = new FormData(gridForm);
+  gridState = Object.fromEntries(Object.entries(gridDefaults).map(([key, defaultValue]) => [key, data.get(key) ?? defaultValue]));
+}
+
+function applyGridState(nextState) {
+  gridState = { ...gridDefaults, ...nextState };
+  Object.entries(gridState).forEach(([name, value]) => {
+    const elements = gridForm.elements[name];
+    if (!elements) return;
+    if (elements instanceof RadioNodeList) elements.value = value;
+    else elements.value = value;
+  });
+  renderGrid();
+}
+
+function titleTemplate(s = titleState, tagName = "article") {
+  const accessoryTemplate = s.accessory === "count"
+    ? `<div class="title-template-accessory title-count"><strong>${escapeHtml(s.currentCount)}</strong>/${escapeHtml(s.totalCount)}</div>`
+    : s.accessory === "viewAll"
+      ? `<div class="title-template-accessory title-view-all"><span>${escapeHtml(s.viewAllLabel)}</span><img src="./assets/chevron-right.svg" alt="" /></div>`
+      : "";
+  const secondaryTemplate = s.type === "basic"
+    ? `<p class="title-template-subtitle">${escapeHtml(s.subtitle)}</p>`
+    : s.type === "clock"
+      ? `<p class="title-template-timer">${escapeHtml(s.timer)}</p>`
+      : "";
+
+  return `<${tagName} class="title-template type-${s.type} accessory-${s.accessory}" aria-label="${s.type} 타이틀 · ${s.accessory}">
+    <div class="title-template-main">
+      <h3 class="title-template-heading">${escapeHtml(s.title)}</h3>
+      ${secondaryTemplate}
+    </div>
+    ${accessoryTemplate}
+  </${tagName}>`;
+}
+
+function titlePropsObject() {
+  const props = {
+    type: titleState.type,
+    accessory: titleState.accessory,
+    title: titleState.title,
+  };
+  if (titleState.type === "basic") props.subtitle = titleState.subtitle;
+  if (titleState.type === "clock") props.timer = titleState.timer;
+  if (titleState.accessory === "count") {
+    props.currentCount = titleState.currentCount;
+    props.totalCount = titleState.totalCount;
+  }
+  if (titleState.accessory === "viewAll") props.viewAllLabel = titleState.viewAllLabel;
+  return props;
+}
+
+function titleRawCode() {
+  const props = titlePropsObject();
+  if (activeTab === "json") return JSON.stringify(props, null, 2);
+  const lines = Object.entries(props).map(([key, value]) => `  ${key}="${value}"`);
+  return ["<TitleTemplate", ...lines, "/>"].join("\n");
+}
+
+function titleHighlightedCode() {
+  return escapeHtml(titleRawCode())
+    .replace(/(&quot;.*?&quot;)/g, '<span class="code-string">$1</span>')
+    .replace(/^\s{2}([a-zA-Z]+)/gm, '  <span class="code-key">$1</span>');
+}
+
+function updateTitleLogic() {
+  const notes = ["너비 375px, 좌우 16px·상하 24px 패딩을 사용합니다."];
+  if (titleState.type === "short") notes.push("SHORT는 큰 타이틀만 한 줄로 표시합니다.");
+  if (titleState.type === "basic") notes.push("BASIC은 큰 타이틀과 작은 타이틀 사이 간격을 10px로 둡니다.");
+  if (titleState.type === "clock") notes.push("CLOCK은 타이틀 아래 12px 간격으로 Rubik Bold 40px 타이머를 표시합니다.");
+  if (titleState.accessory === "none") notes.push("우측 옵션이 없으면 오른쪽 패딩을 66px로 둡니다.");
+  if (titleState.accessory === "count") notes.push("타이틀과 카운트 사이 간격은 40px이며, 별도의 카운트 UI는 추가하지 않습니다.");
+  if (titleState.accessory === "viewAll") notes.push("타이틀과 전체 보기 사이 간격은 40px이며, 하단 전체 보기 버튼은 추가하지 않습니다.");
+  notes.push("제목은 한 줄을 넘기지 않으며, 메인·서브 타이틀의 영문도 Pretendard를 사용합니다.");
+  titleLogicText.textContent = notes.join(" ");
+}
+
+function updateTitleControls() {
+  const relevance = {
+    subtitle: titleState.type === "basic",
+    timer: titleState.type === "clock",
+    count: titleState.accessory === "count",
+    viewAll: titleState.accessory === "viewAll",
+  };
+  Object.entries(relevance).forEach(([name, isRelevant]) => {
+    document.querySelectorAll(`[data-title-field="${name}"]`).forEach((label) => {
+      label.classList.toggle("is-irrelevant", !isRelevant);
+      label.querySelector("input").disabled = !isRelevant;
+    });
+  });
+}
+
+function renderTitle() {
+  titlePreview.innerHTML = titleTemplate();
+  titleCodeOutput.innerHTML = titleHighlightedCode();
+  titleStateSummary.textContent = `${titleState.type} · ${titleState.accessory} · 375px`;
+  updateTitleLogic();
+  updateTitleControls();
 }
 
 function getVisibility(s = state) {
@@ -190,6 +367,60 @@ function cardTemplate(s = state) {
   `;
 }
 
+function gridPropsObject() {
+  const config = gridLayouts[gridState.grid];
+  return {
+    type: gridState.grid,
+    service: gridState.service,
+    columns: config.columns,
+    itemCount: config.itemCount,
+    columnGap: config.columnGap,
+    rowGap: config.rowGap,
+    cardLayout: config.cardLayout,
+  };
+}
+
+function gridRawCode() {
+  const props = gridPropsObject();
+  if (activeTab === "json") return JSON.stringify(props, null, 2);
+  const lines = Object.entries(props).map(([key, value]) => {
+    const rendered = typeof value === "string" ? `"${value}"` : `{${value}}`;
+    return `  ${key}=${rendered}`;
+  });
+  return ["<ProductGridTemplate", ...lines, "/>"].join("\n");
+}
+
+function gridHighlightedCode() {
+  return escapeHtml(gridRawCode())
+    .replace(/(&quot;.*?&quot;)/g, '<span class="code-string">$1</span>')
+    .replace(/\b(\d+)\b/g, '<span class="code-bool">$1</span>')
+    .replace(/^\s{2}([a-zA-Z]+)/gm, '  <span class="code-key">$1</span>');
+}
+
+function updateGridLogic() {
+  const config = gridLayouts[gridState.grid];
+  const serviceLabel = gridState.service === "rent" ? "렌트" : "구매";
+  const common = `현재 ${serviceLabel} 상품 카드를 사용합니다. 모바일 375px 기준 좌우 16px 패딩, 콘텐츠 너비 343px을 사용합니다. ${config.columns}열 카드 사이 간격은 ${config.columnGap}px, 줄 사이는 ${config.rowGap}px입니다.`;
+  const detail = gridState.grid === "grid1"
+    ? "상품은 최대 5개까지 노출하며 이미지 옵션·랭킹 옵션·전체 보기 버튼을 사용하지 않습니다."
+    : gridState.grid === "grid2"
+      ? "상품은 최소 4개부터 짝수 단위로 노출하며 랭킹 옵션을 사용하지 않습니다."
+      : "상품은 최소 6개부터 3의 배수 단위로 노출하며 천만원대 상품 노출은 지양합니다.";
+  gridLogicText.textContent = `${common} ${detail}`;
+}
+
+function renderGrid() {
+  const config = gridLayouts[gridState.grid];
+  const serviceLabel = gridState.service === "rent" ? "렌트" : "구매";
+  const cardState = { ...state, service: gridState.service, layout: config.cardLayout };
+  const cards = Array.from({ length: config.itemCount }, () => cardTemplate(cardState)).join("");
+  gridPreview.innerHTML = `<section class="product-grid-template ${gridState.grid}" aria-label="${config.label} 미리보기">${cards}</section>`;
+  gridPreviewStage.dataset.grid = gridState.grid;
+  gridCodeOutput.innerHTML = gridHighlightedCode();
+  gridStateSummary.textContent = `${config.label} · ${serviceLabel} · ${config.columns} column${config.columns > 1 ? "s" : ""} · ${config.itemCount} item${config.itemCount > 1 ? "s" : ""}`;
+  updateGridLogic();
+}
+
 function propsObject() {
   return {
     layout: state.layout,
@@ -266,6 +497,54 @@ function render() {
   updateIrrelevantControls();
 }
 
+function renderActive() {
+  if (activeGuide === "title") renderTitle();
+  else if (activeGuide === "grid") renderGrid();
+  else render();
+}
+
+function activePropsObject() {
+  if (activeGuide === "title") return titlePropsObject();
+  if (activeGuide === "grid") return gridPropsObject();
+  return propsObject();
+}
+
+function activeRawCode() {
+  if (activeGuide === "title") return titleRawCode();
+  if (activeGuide === "grid") return gridRawCode();
+  return rawCode();
+}
+
+function setActiveGuide(guide) {
+  activeGuide = ["product", "title", "grid"].includes(guide) ? guide : "product";
+  document.querySelectorAll("[data-guide-section]").forEach((section) => {
+    section.hidden = section.dataset.guideSection !== activeGuide;
+  });
+  document.querySelectorAll("[data-guide-tab]").forEach((button) => {
+    const isActive = button.dataset.guideTab === activeGuide;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  const figmaSourceLink = document.querySelector("#figmaSourceLink");
+  const guideMeta = {
+    product: {
+      href: "https://www.figma.com/design/qvPTRPZfih4sMEBTO7AYZt/Product-Item-grid-guide?node-id=3271-12778",
+      title: "Product Item · Playground",
+    },
+    title: {
+      href: "https://www.figma.com/design/qvPTRPZfih4sMEBTO7AYZt/Product-Item-grid-guide?node-id=2899-2712",
+      title: "Title Template · Playground",
+    },
+    grid: {
+      href: "https://www.figma.com/design/qvPTRPZfih4sMEBTO7AYZt/Product-Item-grid-guide?node-id=3196-8459",
+      title: "Product Grid · Playground",
+    },
+  };
+  figmaSourceLink.href = guideMeta[activeGuide].href;
+  document.title = guideMeta[activeGuide].title;
+  renderActive();
+}
+
 function showToast(message) {
   clearTimeout(toastTimer);
   toast.textContent = message;
@@ -291,20 +570,54 @@ async function copyText(text, message = "복사했습니다.") {
 function stateUrl() {
   const url = new URL(window.location.href);
   url.search = "";
-  Object.entries(propsObject()).forEach(([key, value]) => url.searchParams.set(key, String(value)));
+  url.searchParams.set("guide", activeGuide);
+  if (activeGuide === "grid") {
+    url.searchParams.set("grid", gridState.grid);
+    url.searchParams.set("service", gridState.service);
+    Object.entries(state).forEach(([key, value]) => url.searchParams.set(`card_${key}`, String(value)));
+  } else {
+    Object.entries(activePropsObject()).forEach(([key, value]) => url.searchParams.set(key, String(value)));
+  }
   return url.toString();
 }
 
 function loadFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  if (!params.size) return;
-  const next = {};
-  Object.entries(defaults).forEach(([key, defaultValue]) => {
-    if (!params.has(key)) return;
-    next[key] = typeof defaultValue === "boolean" ? params.get(key) === "true" : params.get(key);
-  });
-  applyState(next);
-  if (["big", "1grid", "horizontal", "compact"].includes(next.layout)) setZoom("1");
+  const requestedGuide = params.get("guide");
+  const guide = ["product", "title", "grid"].includes(requestedGuide) ? requestedGuide : "product";
+  if (guide === "title") {
+    const next = {};
+    Object.keys(titleDefaults).forEach((key) => {
+      if (params.has(key)) next[key] = params.get(key);
+    });
+    applyTitleState(next);
+    setActiveGuide("title");
+    return;
+  }
+  if (guide === "grid") {
+    const nextCardState = {};
+    Object.entries(defaults).forEach(([key, defaultValue]) => {
+      const paramKey = `card_${key}`;
+      if (!params.has(paramKey)) return;
+      nextCardState[key] = typeof defaultValue === "boolean" ? params.get(paramKey) === "true" : params.get(paramKey);
+    });
+    applyState(nextCardState);
+    const nextGrid = gridLayouts[params.get("grid")] ? params.get("grid") : gridDefaults.grid;
+    const nextService = ["rent", "vintage"].includes(params.get("service")) ? params.get("service") : gridDefaults.service;
+    applyGridState({ grid: nextGrid, service: nextService });
+    setActiveGuide("grid");
+    return;
+  }
+  if (params.size) {
+    const next = {};
+    Object.entries(defaults).forEach(([key, defaultValue]) => {
+      if (!params.has(key)) return;
+      next[key] = typeof defaultValue === "boolean" ? params.get(key) === "true" : params.get(key);
+    });
+    applyState(next);
+    if (["big", "1grid", "horizontal", "compact"].includes(next.layout)) setZoom("1");
+  }
+  setActiveGuide("product");
 }
 
 function renderPresets() {
@@ -333,6 +646,23 @@ form.addEventListener("input", (event) => {
   render();
 });
 
+titleForm.addEventListener("input", () => {
+  readTitleForm();
+  renderTitle();
+});
+
+gridForm.addEventListener("input", () => {
+  readGridForm();
+  renderGrid();
+});
+
+document.querySelectorAll("[data-guide-tab]").forEach((button) => {
+  button.addEventListener("click", () => {
+    setActiveGuide(button.dataset.guideTab);
+    document.querySelector(".guide-nav").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
 document.querySelectorAll("[data-zoom]").forEach((button) => {
   button.addEventListener("click", () => {
     setZoom(button.dataset.zoom);
@@ -343,11 +673,11 @@ document.querySelectorAll("[data-tab]").forEach((button) => {
   button.addEventListener("click", () => {
     activeTab = button.dataset.tab;
     document.querySelectorAll("[data-tab]").forEach((item) => {
-      const isActive = item === button;
+      const isActive = item.dataset.tab === activeTab;
       item.classList.toggle("active", isActive);
       item.setAttribute("aria-selected", String(isActive));
     });
-    render();
+    renderActive();
   });
 });
 
@@ -359,11 +689,20 @@ document.querySelector("#presetGrid").addEventListener("click", (event) => {
   showToast("프리셋을 적용했습니다.");
 });
 
-document.querySelector("#resetButton").addEventListener("click", () => { applyState(defaults); showToast("기본값으로 초기화했습니다."); });
+document.querySelector("#resetButton").addEventListener("click", () => {
+  if (activeGuide === "title") applyTitleState(titleDefaults);
+  else if (activeGuide === "grid") applyGridState(gridDefaults);
+  else applyState(defaults);
+  showToast("기본값으로 초기화했습니다.");
+});
 document.querySelector("#copyCodeButton").addEventListener("click", () => copyText(rawCode(), "코드를 복사했습니다."));
-document.querySelector("#copyHeaderButton").addEventListener("click", () => copyText(JSON.stringify(propsObject(), null, 2), "Props를 복사했습니다."));
+document.querySelector("#titleCopyCodeButton").addEventListener("click", () => copyText(titleRawCode(), "코드를 복사했습니다."));
+document.querySelector("#gridCopyCodeButton").addEventListener("click", () => copyText(gridRawCode(), "코드를 복사했습니다."));
+document.querySelector("#copyHeaderButton").addEventListener("click", () => copyText(JSON.stringify(activePropsObject(), null, 2), "Props를 복사했습니다."));
 document.querySelector("#shareButton").addEventListener("click", () => copyText(stateUrl(), "현재 설정 링크를 복사했습니다."));
+document.querySelector("#titleShareButton").addEventListener("click", () => copyText(stateUrl(), "현재 설정 링크를 복사했습니다."));
+document.querySelector("#gridShareButton").addEventListener("click", () => copyText(stateUrl(), "현재 설정 링크를 복사했습니다."));
 
 renderPresets();
 loadFromUrl();
-render();
+renderActive();

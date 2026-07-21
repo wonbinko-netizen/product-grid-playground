@@ -15,7 +15,7 @@
     <header class="topbar">
       <a class="brand-lockup" href="#" aria-label="Product Item Playground 홈">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <span>Product Item</span>
+        <span>UI Guide</span>
         <span class="brand-slash">/</span>
         <span class="brand-muted">Playground</span>
       </a>
@@ -23,6 +23,7 @@
         <a
           class="text-link"
           href="https://www.figma.com/design/qvPTRPZfih4sMEBTO7AYZt/Product-Item-grid-guide?node-id=3271-12778"
+          id="figmaSourceLink"
           target="_blank"
           rel="noreferrer"
         >
@@ -38,6 +39,19 @@
     </header>
 
     <main>
+      <nav class="guide-nav" aria-label="가이드 종류">
+        <button type="button" class="active" data-guide-tab="product" aria-pressed="true">
+          <span>01</span> 상품 카드
+        </button>
+        <button type="button" data-guide-tab="title" aria-pressed="false">
+          <span>02</span> 타이틀 템플릿
+        </button>
+        <button type="button" data-guide-tab="grid" aria-pressed="false">
+          <span>03</span> 상품 그리드
+        </button>
+      </nav>
+
+      <div id="productGuide" data-guide-section="product">
       <section class="intro" aria-labelledby="pageTitle">
         <div>
           <p class="eyebrow">DESIGN SYSTEM · 2026</p>
@@ -248,6 +262,242 @@
         </div>
         <div class="preset-grid" id="presetGrid"></div>
       </section>
+      </div>
+
+      <div id="titleGuide" data-guide-section="title" hidden>
+        <section class="intro" aria-labelledby="titlePageTitle">
+          <div>
+            <p class="eyebrow">TEMPLATE GUIDE · TITLE</p>
+            <h1 id="titlePageTitle">타이틀 템플릿의 모든 조합을<br />한곳에서 확인하세요.</h1>
+          </div>
+          <p class="intro-copy">
+            SHORT·BASIC·CLOCK 타입과 우측 옵션을 조합해 보세요.<br />
+            실제 규격과 개발 값, 적용 규칙을 함께 확인할 수 있어요.
+          </p>
+        </section>
+
+        <section class="workspace title-workspace" aria-label="타이틀 템플릿 플레이그라운드">
+          <aside class="panel controls-panel" aria-labelledby="titleControlsTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="step-label">01</p>
+                <h2 id="titleControlsTitle">템플릿 설정</h2>
+              </div>
+              <span class="live-pill"><i></i> LIVE</span>
+            </div>
+
+            <form id="titleControlsForm">
+              <fieldset class="control-section">
+                <legend>타입</legend>
+                <div class="segmented three-segmented" role="radiogroup" aria-label="타이틀 타입">
+                  <label><input type="radio" name="type" value="short" checked /><span>SHORT</span></label>
+                  <label><input type="radio" name="type" value="basic" /><span>BASIC</span></label>
+                  <label><input type="radio" name="type" value="clock" /><span>CLOCK</span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="control-section">
+                <legend>우측 옵션</legend>
+                <div class="segmented three-segmented" role="radiogroup" aria-label="우측 옵션">
+                  <label><input type="radio" name="accessory" value="none" checked /><span>없음</span></label>
+                  <label><input type="radio" name="accessory" value="count" /><span>카운트</span></label>
+                  <label><input type="radio" name="accessory" value="viewAll" /><span>전체 보기</span></label>
+                </div>
+              </fieldset>
+
+              <details class="content-details" open>
+                <summary>표시 문구 편집 <span aria-hidden="true">⌄</span></summary>
+                <div class="field-grid">
+                  <label class="field-wide">큰 타이틀<input name="title" value="큰 타이틀 한 줄" /></label>
+                  <label data-title-field="subtitle">작은 타이틀<input name="subtitle" value="작은 타이틀 한 줄" /></label>
+                  <label data-title-field="timer">타이머<input name="timer" value="04:21:39" /></label>
+                  <label data-title-field="count">현재 카운트<input name="currentCount" value="1" /></label>
+                  <label data-title-field="count">전체 카운트<input name="totalCount" value="20" /></label>
+                  <label data-title-field="viewAll">전체 보기 문구<input name="viewAllLabel" value="전체 보기" /></label>
+                </div>
+              </details>
+            </form>
+          </aside>
+
+          <section class="panel preview-panel title-preview-panel" aria-labelledby="titlePreviewTitle">
+            <div class="panel-heading preview-heading">
+              <div>
+                <p class="step-label">02</p>
+                <h2 id="titlePreviewTitle">미리보기</h2>
+              </div>
+              <span class="format-pill">375px</span>
+            </div>
+
+            <div class="preview-stage title-preview-stage" id="titlePreviewStage">
+              <div class="preview-grid-bg" aria-hidden="true"></div>
+              <div id="titlePreview" class="title-preview" aria-live="polite"></div>
+              <span class="boundary-note">구분용 선 · 실제 적용 X</span>
+            </div>
+
+            <div class="state-caption">
+              <span class="state-dot title-dot"></span>
+              <code id="titleStateSummary">short · none · 375px</code>
+            </div>
+          </section>
+
+          <aside class="panel output-panel" aria-labelledby="titleOutputTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="step-label">03</p>
+                <h2 id="titleOutputTitle">개발 값</h2>
+              </div>
+              <span class="format-pill">React</span>
+            </div>
+
+            <div class="code-tabs" role="tablist" aria-label="타이틀 개발 값 형식">
+              <button type="button" class="active" data-tab="jsx" role="tab" aria-selected="true">Component</button>
+              <button type="button" data-tab="json" role="tab" aria-selected="false">Props JSON</button>
+            </div>
+            <div class="code-wrap">
+              <pre><code id="titleCodeOutput"></code></pre>
+              <button class="copy-code" id="titleCopyCodeButton" type="button" aria-label="타이틀 코드 복사">
+                <span aria-hidden="true">⧉</span> 복사
+              </button>
+            </div>
+
+            <div class="logic-note">
+              <span aria-hidden="true">i</span>
+              <p><strong>표시 규칙</strong><br /><span id="titleLogicText"></span></p>
+            </div>
+
+            <button class="share-button" id="titleShareButton" type="button">
+              현재 설정 링크 복사 <span aria-hidden="true">↗</span>
+            </button>
+          </aside>
+        </section>
+
+      </div>
+
+      <div id="gridGuide" data-guide-section="grid" hidden>
+        <section class="intro" aria-labelledby="gridPageTitle">
+          <div>
+            <p class="eyebrow">TEMPLATE GUIDE · PRODUCT GRID</p>
+            <h1 id="gridPageTitle">상품 수에 맞는 그리드를<br />한눈에 확인하세요.</h1>
+          </div>
+          <p class="intro-copy">
+            1개·2개·3개 그리드를 선택하면 실제 모바일 규격으로 미리 볼 수 있어요.<br />
+            상품 카드는 ‘상품 카드’ 탭에서 만든 현재 설정을 그대로 사용합니다.
+          </p>
+        </section>
+
+        <section class="workspace grid-workspace" aria-label="상품 그리드 플레이그라운드">
+          <aside class="panel controls-panel" aria-labelledby="gridControlsTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="step-label">01</p>
+                <h2 id="gridControlsTitle">그리드 선택</h2>
+              </div>
+              <span class="live-pill"><i></i> LIVE</span>
+            </div>
+
+            <form id="gridControlsForm">
+              <fieldset class="control-section grid-selector-section">
+                <legend>그리드 <span class="option-count">3</span></legend>
+                <div class="grid-layout-options" role="radiogroup" aria-label="상품 그리드">
+                  <label class="grid-layout-option">
+                    <input type="radio" name="grid" value="grid1" checked />
+                    <span class="grid-option-card">
+                      <span class="grid-option-diagram diagram-one" aria-hidden="true"><i></i></span>
+                      <strong>상품 1개 그리드</strong>
+                      <small>1단 · 한 줄 1개</small>
+                    </span>
+                  </label>
+                  <label class="grid-layout-option">
+                    <input type="radio" name="grid" value="grid2" />
+                    <span class="grid-option-card">
+                      <span class="grid-option-diagram diagram-two" aria-hidden="true"><i></i><i></i></span>
+                      <strong>상품 2개 그리드</strong>
+                      <small>2단 · 한 줄 2개</small>
+                    </span>
+                  </label>
+                  <label class="grid-layout-option">
+                    <input type="radio" name="grid" value="grid3" />
+                    <span class="grid-option-card">
+                      <span class="grid-option-diagram diagram-three" aria-hidden="true"><i></i><i></i><i></i></span>
+                      <strong>상품 3개 그리드</strong>
+                      <small>3단 · 한 줄 3개</small>
+                    </span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="control-section">
+                <legend>서비스 타입</legend>
+                <div class="segmented" role="radiogroup" aria-label="상품 그리드 서비스 타입">
+                  <label>
+                    <input type="radio" name="service" value="rent" checked />
+                    <span>렌트</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="service" value="vintage" />
+                    <span>구매</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="linked-card-note">
+                <span aria-hidden="true">↗</span>
+                <p><strong>상품 카드 설정 연동</strong><br />서비스 타입은 여기서 선택하고, 나머지 상태·문구는 상품 카드 탭의 현재 값을 사용해요.</p>
+              </div>
+            </form>
+          </aside>
+
+          <section class="panel preview-panel grid-preview-panel" aria-labelledby="gridPreviewTitle">
+            <div class="panel-heading preview-heading">
+              <div>
+                <p class="step-label">02</p>
+                <h2 id="gridPreviewTitle">미리보기</h2>
+              </div>
+              <span class="format-pill">MOBILE · 375px</span>
+            </div>
+
+            <div class="preview-stage grid-preview-stage" id="gridPreviewStage">
+              <div class="preview-grid-bg" aria-hidden="true"></div>
+              <div id="gridPreview" class="grid-preview" aria-live="polite"></div>
+            </div>
+
+            <div class="state-caption">
+              <span class="state-dot grid-dot"></span>
+              <code id="gridStateSummary">상품 1개 그리드 · 렌트 · 1 column · 1 item</code>
+            </div>
+          </section>
+
+          <aside class="panel output-panel" aria-labelledby="gridOutputTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="step-label">03</p>
+                <h2 id="gridOutputTitle">개발 값</h2>
+              </div>
+              <span class="format-pill">React</span>
+            </div>
+
+            <div class="code-tabs" role="tablist" aria-label="상품 그리드 개발 값 형식">
+              <button type="button" class="active" data-tab="jsx" role="tab" aria-selected="true">Component</button>
+              <button type="button" data-tab="json" role="tab" aria-selected="false">Props JSON</button>
+            </div>
+            <div class="code-wrap">
+              <pre><code id="gridCodeOutput"></code></pre>
+              <button class="copy-code" id="gridCopyCodeButton" type="button" aria-label="상품 그리드 코드 복사">
+                <span aria-hidden="true">⧉</span> 복사
+              </button>
+            </div>
+
+            <div class="logic-note">
+              <span aria-hidden="true">i</span>
+              <p><strong>적용 규칙</strong><br /><span id="gridLogicText"></span></p>
+            </div>
+
+            <button class="share-button" id="gridShareButton" type="button">
+              현재 설정 링크 복사 <span aria-hidden="true">↗</span>
+            </button>
+          </aside>
+        </section>
+      </div>
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다.</div>
